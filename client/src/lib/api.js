@@ -21,12 +21,20 @@ const tokenManager = {
 const apiRequest = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
   const config = {
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
     ...options,
   };
+
+  // Only set Content-Type to application/json if body is NOT FormData
+  if (!(options.body instanceof FormData)) {
+    config.headers = {
+      "Content-Type": "application/json",
+      ...options.headers,
+    };
+  } else {
+    config.headers = {
+      ...options.headers,
+    };
+  }
 
   // Add auth token if available
   const token = tokenManager.get();
