@@ -141,3 +141,10 @@ Make sure you have the following installed:
 7. **Access the application**
    
    Open your browser and navigate to `http://localhost:3000`
+
+
+## 📽️ Working Demo
+
+Watch the live demo showcasing core features like transaction tracking, receipt OCR, and analytics:
+
+👉 [Watch Demo Video](https://drive.google.com/file/d/1Z26Tu15O-MnM768PSWaEIiOTIzGQAtv5/view?usp=drive_link)
