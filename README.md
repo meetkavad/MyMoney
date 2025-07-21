@@ -92,6 +92,10 @@ Make sure you have the following installed:
    # Server Port
    PORT=5000
 
+   # Email Configuration
+   MAIL_ID = <your_mail_id>
+   MAIL_PASSWORD = <app_password>
+
    # OpenRouter AI API
    OPENROUTER_API_KEY=sk-or-v1-your-openrouter-api-key-here
    ```
