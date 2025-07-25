@@ -14,14 +14,28 @@ app.use(express.json());
 // cors middleware to allow cross-origin requests
 app.use(cors());
 
-app.use("/auth", authRouter);
-app.use("/user", userRouter);
-app.use("/transaction", transactionRouter);
+// Add API prefix to all routes for Vercel
+app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
+app.use("/api/transaction", transactionRouter);
+
+// Health check endpoint
+app.get("/api", (req, res) => {
+  res.json({ message: "MyMoney API is running!" });
+});
 
 // Connect DB immediately when the function is first invoked
 connectDB(process.env.MONGO_URI || "mongodb://localhost:27017/MyMoney")
   .then(() => console.log("db connected"))
   .catch((err) => console.error("DB connection error:", err));
+
+// For local development
+if (process.env.NODE_ENV !== "production") {
+  const port = process.env.PORT || 5000;
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}
 
 // Export the app as a handler for Vercel
 export default app;
