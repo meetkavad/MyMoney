@@ -14,9 +14,9 @@ app.use(express.json());
 // cors middleware to allow cross-origin requests
 app.use(cors());
 
-app.use("/api/auth", authRouter);
-app.use("/api/user", userRouter);
-app.use("/api/transaction", transactionRouter);
+app.use("/auth", authRouter);
+app.use("/user", userRouter);
+app.use("/transaction", transactionRouter);
 
 // Connect DB immediately when the function is first invoked
 connectDB(process.env.MONGO_URI || "mongodb://localhost:27017/MyMoney")
