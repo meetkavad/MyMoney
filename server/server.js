@@ -19,23 +19,18 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/transaction", transactionRouter);
 
-// Health check endpoint
-app.get("/api", (req, res) => {
-  res.json({ message: "MyMoney API is running!" });
-});
+const PORT = process.env.PORT || 5000;
 
-// Connect DB immediately when the function is first invoked
-connectDB(process.env.MONGO_URI || "mongodb://localhost:27017/MyMoney")
-  .then(() => console.log("db connected"))
-  .catch((err) => console.error("DB connection error:", err));
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGO_URI);
+    console.log("Database connected.");
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Error starting server:", error);
+  }
+};
 
-// For local development
-if (process.env.NODE_ENV !== "production") {
-  const port = process.env.PORT || 5000;
-  app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-  });
-}
-
-// Export the app as a handler for Vercel
-export default app;
+start();
