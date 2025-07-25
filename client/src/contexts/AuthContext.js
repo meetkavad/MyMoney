@@ -23,81 +23,61 @@ export const AuthProvider = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Check authentication status on mount and route changes
+  // Check authentication status on mount only
   useEffect(() => {
-    const checkAuth = () => {
-      const token = authHelpers.getToken();
-
-      if (token) {
-        setIsAuthenticated(true);
-        setUser({ token });
-      } else {
-        setIsAuthenticated(false);
-        setUser(null);
-      }
-
-      setIsLoading(false);
-    };
-
-    checkAuth();
+    const token = authHelpers.getToken();
+    if (token) {
+      setIsAuthenticated(true);
+      setUser({ token });
+    }
+    setIsLoading(false);
   }, []);
 
+  // Handle route protection - but only when not loading
   useEffect(() => {
-    const handleAuthError = (event) => {
-      // Force logout only if we're currently authenticated
+    if (isLoading) return;
+
+    const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
+      pathname.startsWith(route)
+    );
+    const isAuthRedirectRoute = AUTH_REDIRECT_ROUTES.includes(pathname);
+
+    if (!isAuthenticated && isProtectedRoute) {
+      router.replace("/login");
+    } else if (isAuthenticated && isAuthRedirectRoute) {
+      router.replace("/dashboard");
+    }
+  }, [isAuthenticated, pathname, router, isLoading]);
+
+  // Handle auth errors
+  useEffect(() => {
+    const handleAuthError = () => {
       if (isAuthenticated) {
+        authHelpers.clearAuth();
         setIsAuthenticated(false);
         setUser(null);
-        router.push("/login");
+        router.replace("/login");
       }
     };
 
     if (typeof window !== "undefined") {
       window.addEventListener("auth-error", handleAuthError);
-
-      return () => {
-        window.removeEventListener("auth-error", handleAuthError);
-      };
+      return () => window.removeEventListener("auth-error", handleAuthError);
     }
   }, [isAuthenticated, router]);
-
-  // Handle route protection
-  useEffect(() => {
-    if (isLoading) return; // Don't redirect while loading
-
-    const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
-      pathname.startsWith(route)
-    );
-
-    const isAuthRedirectRoute = AUTH_REDIRECT_ROUTES.some(
-      (route) => pathname === route
-    );
-
-    // Redirect unauthenticated users from protected routes to login
-    if (!isAuthenticated && isProtectedRoute) {
-      router.push("/login");
-      return;
-    }
-
-    // Redirect authenticated users from auth pages to dashboard
-    if (isAuthenticated && isAuthRedirectRoute) {
-      router.push("/dashboard");
-      return;
-    }
-  }, [isAuthenticated, pathname, router, isLoading]);
 
   const login = (token, userData = null) => {
     authHelpers.saveToken(token);
     setIsAuthenticated(true);
     setUser(userData || { token });
-    router.push("/dashboard");
+    // Don't navigate here - let the useEffect handle it
   };
 
   const logout = () => {
     authHelpers.clearAuth();
     setIsAuthenticated(false);
     setUser(null);
-    router.push("/login");
+    router.replace("/login");
   };
 
   const value = {
