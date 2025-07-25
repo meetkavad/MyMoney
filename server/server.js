@@ -18,23 +18,6 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/transaction", transactionRouter);
 
-// const port = process.env.PORT || 5000;
-
-// // Start the server and connect to the database
-// const start = async () => {
-//   try {
-//     await connectDB(
-//       process.env.MONGO_URI || "mongodb://localhost:27017/MyMoney"
-//     );
-//     console.log("db connected");
-//     app.listen(port, console.log(`server listening at port ${port}`));
-//   } catch (error) {
-//     console.error("Error starting server:", error);
-//   }
-// };
-
-// start();
-
 // Connect DB immediately when the function is first invoked
 connectDB(process.env.MONGO_URI || "mongodb://localhost:27017/MyMoney")
   .then(() => console.log("db connected"))
