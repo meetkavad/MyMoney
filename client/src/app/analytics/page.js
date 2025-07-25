@@ -1,7 +1,7 @@
 "use client";
 
 import AuthNavbar from "@/components/layout/AuthNavbar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { transactionAPI } from "@/lib/api";
 import { getDateRange } from "@/lib/dateUtils";
@@ -62,7 +62,7 @@ export default function Analytics() {
   const [totalAmount, setTotalAmount] = useState({ income: 0, expense: 0 });
 
   // Fetch analytics data from API
-  const fetchAnalyticsData = async () => {
+  const fetchAnalyticsData = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -99,11 +99,11 @@ export default function Analytics() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentDate, dateRange, selectedView]);
 
   useEffect(() => {
     fetchAnalyticsData();
-  }, [currentDate, dateRange, selectedView]);
+  }, [fetchAnalyticsData]);
 
   return (
     <div

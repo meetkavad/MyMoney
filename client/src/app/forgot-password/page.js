@@ -157,7 +157,7 @@ export default function ForgotPassword() {
             </h1>
 
             <p className="mb-6" style={{ color: "#757575" }}>
-              We've sent a 6-digit verification code to{" "}
+              We&apos;ve sent a 6-digit verification code to{" "}
               <span style={{ color: "#212121", fontWeight: "500" }}>
                 {email}
               </span>
@@ -236,7 +236,7 @@ export default function ForgotPassword() {
               style={{ borderTopColor: "#E0E0E0" }}
             >
               <p className="text-sm mb-3" style={{ color: "#757575" }}>
-                Didn't receive the code?
+                Didn&apos;t receive the code?
               </p>
               <button
                 onClick={resendCode}
@@ -497,8 +497,8 @@ export default function ForgotPassword() {
               Reset Your Password
             </h1>
             <p style={{ color: "#757575" }}>
-              Enter your email address and we'll send you a link to reset your
-              password
+              Enter your email address and we&apos;ll send you a link to reset
+              your password
             </p>
           </div>
 

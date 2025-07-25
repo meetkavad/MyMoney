@@ -256,7 +256,7 @@ export default function Login() {
             style={{ borderTopColor: "#E0E0E0" }}
           >
             <p style={{ color: "#757575" }}>
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link
                 href="/signup"
                 className="font-medium hover:underline"

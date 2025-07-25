@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import NewTransactionModal from "@/components/modals/NewTransactionModal";
 import TransactionDetailsModal from "@/components/modals/TransactionDetailsModal";
 import UploadModal from "@/components/modals/UploadModal";
@@ -65,7 +65,7 @@ export default function Dashboard() {
   const transactionsPerPage = 10;
 
   // Fetch transactions from API
-  const fetchTransactions = async () => {
+  const fetchTransactions = useCallback(async () => {
     // Don't fetch if user is not authenticated
     if (!isAuthenticated) {
       setIsLoading(false);
@@ -119,14 +119,14 @@ export default function Dashboard() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isAuthenticated, currentDate, dateRange, currentPage]);
 
   // Effect to fetch data when dependencies change
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
       fetchTransactions();
     }
-  }, [currentDate, dateRange, currentPage, isAuthenticated, authLoading]);
+  }, [fetchTransactions, isAuthenticated, authLoading]);
 
   // Search effect - reset to page 1 when searching
   useEffect(() => {
@@ -138,7 +138,13 @@ export default function Dashboard() {
       // If already on page 1, fetch data
       fetchTransactions();
     }
-  }, [searchQuery, isAuthenticated, authLoading]);
+  }, [
+    searchQuery,
+    isAuthenticated,
+    authLoading,
+    currentPage,
+    fetchTransactions,
+  ]);
 
   // Fetch user profile data
   useEffect(() => {
